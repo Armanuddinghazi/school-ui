@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import { useNavigate } from 'react-router-dom'
 
 const AdminLogin = () => {
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +59,6 @@ const AdminLogin = () => {
       localStorage.setItem("token", res.data.token);
       conFettiLogin();
       setTimeout(() => {
-        // window.location.href = "/admin";
         navigate("/admin");
       }, 2000);
 
