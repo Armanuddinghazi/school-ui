@@ -2,26 +2,26 @@ import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
 import { toast } from "react-toastify";
 
-const FeatureAdmin = () => {
-    const [features, setFeatures] = useState([]);
+const DepartmentAdmin = () => {
+    const [department, setDepartment] = useState([]);
     const [form, setForm] = useState({
-        count: "",
         title: "",
         content: "",
         icon: null
     });
     const [editId, setEditId] = useState(null);
 
-    const fetchFeatures = async () => {
-        const res = await apiClient.get("/features");
-        setFeatures(res.data);
+    const fetchdepartment = async () => {
+        const res = await apiClient.get("/department");
+        setDepartment(res.data);
     };
 
     useEffect(() => {
-        fetchFeatures();
+        fetchdepartment();
     }, []);
 
     const handleSubmit = async () => {
+
         if (!form.title || !form.content || !form.count) {
             toast.error("All fields required");
             return;
@@ -33,33 +33,32 @@ const FeatureAdmin = () => {
         });
 
         if (editId) {
-            await apiClient.put(`/features/${editId}`, data);
-            toast.success("Updated feature successfully");
+            await apiClient.put(`/department/${editId}`, data);
+            toast.success("Updated department successfully");
         } else {
-            await apiClient.post("/features", data);
-            toast.success("Added feature successfully");
+            await apiClient.post("/department", data);
+            toast.success("Added department successfully");
         }
 
-        setForm({ count: "", title: "", content: "", icon: null });
+        setForm({ title: "", content: "", icon: null });
         setEditId(null);
-        fetchFeatures();
+        fetchdepartment();
     };
 
-    const handleEdit = (f) => {
-        setEditId(f._id);
-        setForm(f);
+    const handleEdit = (d) => {
+        setEditId(d._id);
+        setForm(d);
     };
 
     const handleDelete = async (id) => {
-        await apiClient.delete(`/features/${id}`);
+        await apiClient.delete(`/department/${id}`);
         toast.success("Deleted feature successfully");
-        fetchFeatures();
+        fetchdepartment();
     };
 
     const resetForm = () => {
         setEditId(null);
         setForm({
-            count: "",
             title: "",
             content: "",
             icon: null
@@ -82,21 +81,15 @@ const FeatureAdmin = () => {
                         <div className="card custom-card mb-4">
                             <div className="card-header card-header-custom d-flex align-items-center bg-primary text-white fw-semibold">
                                 <i className="fa-solid fa-pen-to-square me-2"></i>
-                                <h5 className="mb-0">{editId ? "Update Feature" : "Add Feature"}</h5>
+                                <h5 className="mb-0">{editId ? "Update Department Section" : "Add Department Section"}</h5>
                             </div>
                             <div className="card-body">
-                                <div className="row g-3">
-                                    <div className="col-lg-6">
-                                        <label htmlFor="">Count Number</label>
-                                        <input className="form-control" placeholder="Count (01)" value={form.count}
-                                            onChange={e => setForm({ ...form, count: e.target.value })} />
-                                    </div>
-                                    <div className="col-lg-6">
+                                <div className="row g-3">                                 
+                                    <div className="col-lg-12">
                                         <label htmlFor="">Title</label>
                                         <input className="form-control" placeholder="Title" value={form.title}
                                             onChange={e => setForm({ ...form, title: e.target.value })} />
                                     </div>
-
                                     <div className="col-lg-12">
                                         <label htmlFor="">Message</label>
                                         <textarea className="form-control" rows={5} placeholder="Message" value={form.content}
@@ -111,7 +104,7 @@ const FeatureAdmin = () => {
                             <div className="card-footer text-end">
                                 <button className={`btn me-2 py-2 btn-radius-8 ${editId ? "btn-success light" : "btn-primary"}`} onClick={handleSubmit}>
                                     {editId ? <i className="fa-solid fa-rotate me-1"></i> : <i className="fa-solid fa-plus me-1"></i>}
-                                    {editId ? "Update Feature" : "Add Feature"}
+                                    {editId ? "Update Department" : "Add Department"}
                                 </button>
 
                                 {editId && (
@@ -128,7 +121,7 @@ const FeatureAdmin = () => {
                         <div className="card custom-card">
                             <div className="card-header card-header-custom  d-flex align-items-center bg-dark text-white fw-semibold">
                                 <i className="fa-solid fa-list me-2"></i>
-                                <h5 className="mb-0">Existing Features</h5>
+                                <h5 className="mb-0">Existing Department</h5>
                             </div>
 
                             <div className="card-body">
@@ -142,7 +135,7 @@ const FeatureAdmin = () => {
                                         </thead>
 
                                         <tbody>
-                                            {features.map(f => (
+                                            {department.map(f => (
                                                 <tr key={f._id}>
                                                     <td className="fw-semibold">{f.title}</td>
                                                     <td className="text-end">
@@ -164,11 +157,11 @@ const FeatureAdmin = () => {
                                                 </tr>
                                             ))}
 
-                                            {!features.length && (
+                                            {!department.length && (
                                                 <tr>
                                                     <td colSpan="3" className="text-center text-muted py-4">
                                                         <i className="fa-solid fa-circle-info me-2"></i>
-                                                        No features found
+                                                        No department found
                                                     </td>
                                                 </tr>
                                             )}
@@ -185,4 +178,4 @@ const FeatureAdmin = () => {
     );
 };
 
-export default FeatureAdmin;
+export default DepartmentAdmin;
