@@ -2,27 +2,26 @@ import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
 import { toast } from "react-toastify";
 
-const DepartmentAdmin = () => {
-    const [department, setDepartment] = useState([]);
+const InfraAdmin = () => {
+    const [infra, setInfra] = useState([]);
     const [form, setForm] = useState({
         title: "",
         content: "",
-        icon: null
+        image: null
     });
     const [editId, setEditId] = useState(null);
 
-    const fetchdepartment = async () => {
-        const res = await apiClient.get("/department");
-        setDepartment(res.data);
+    const fetchinfra = async () => {
+        const res = await apiClient.get("/infrastructure");
+        setInfra(res.data);
     };
 
     useEffect(() => {
-        fetchdepartment();
+        fetchinfra();
     }, []);
 
     const handleSubmit = async () => {
-
-        if (!form.title || !form.content || !form.count) {
+        if (!form.title || !form.content || !form.image) {
             toast.error("All fields required");
             return;
         }
@@ -33,27 +32,27 @@ const DepartmentAdmin = () => {
         });
 
         if (editId) {
-            await apiClient.put(`/department/${editId}`, data);
-            toast.success("Updated department successfully");
+            await apiClient.put(`/infrastructure/${editId}`, data);
+            toast.success("Updated successfully");
         } else {
-            await apiClient.post("/department", data);
-            toast.success("Added department successfully");
+            await apiClient.post("/infrastructure", data);
+            toast.success("Added successfully");
         }
 
-        setForm({ title: "", content: "", icon: null });
+        setForm({ title: "", content: "", image: null });
         setEditId(null);
-        fetchdepartment();
+        fetchinfra();
     };
 
-    const handleEdit = (d) => {
-        setEditId(d._id);
-        setForm(d);
+    const handleEdit = (f) => {
+        setEditId(f._id);
+        setForm(f);
     };
 
     const handleDelete = async (id) => {
-        await apiClient.delete(`/department/${id}`);
-        toast.success("Deleted feature successfully");
-        fetchdepartment();
+        await apiClient.delete(`/infra/${id}`);
+        toast.success("Deleted successfully");
+        fetchinfra();
     };
 
     const resetForm = () => {
@@ -61,7 +60,7 @@ const DepartmentAdmin = () => {
         setForm({
             title: "",
             content: "",
-            icon: null
+            image: null
         });
     };
 
@@ -72,7 +71,7 @@ const DepartmentAdmin = () => {
                 <div className="d-flex justify-content-between custom-card-header align-items-center mb-4">
                     <h5 className="mb-0">
                         <i className="fa-solid fa-images me-2 text-primary"></i>
-                        Feature Admin Manager
+                        Infrastructure Admin Manager
                     </h5>
                 </div>
                 <div className="row">
@@ -81,30 +80,31 @@ const DepartmentAdmin = () => {
                         <div className="card custom-card mb-4">
                             <div className="card-header card-header-custom d-flex align-items-center bg-primary text-white fw-semibold">
                                 <i className="fa-solid fa-pen-to-square me-2"></i>
-                                <h5 className="mb-0">{editId ? "Update Department Section" : "Add Department Section"}</h5>
+                                <h5 className="mb-0">{editId ? "Update Infra" : "Add Infra"}</h5>
                             </div>
                             <div className="card-body">
-                                <div className="row g-3">                                 
+                                <div className="row g-3">
                                     <div className="col-lg-12">
                                         <label htmlFor="">Title</label>
                                         <input className="form-control" placeholder="Title" value={form.title}
                                             onChange={e => setForm({ ...form, title: e.target.value })} />
                                     </div>
+
                                     <div className="col-lg-12">
                                         <label htmlFor="">Message</label>
                                         <textarea className="form-control" rows={5} placeholder="Message" value={form.content}
                                             onChange={e => setForm({ ...form, content: e.target.value })} />
                                     </div>
                                     <div className="col-lg-12">
-                                        <label htmlFor="">Icon Image</label>
-                                        <input className="form-control" type="file" onChange={e => setForm({ ...form, icon: e.target.files[0] })} />
+                                        <label htmlFor=""> Image</label>
+                                        <input className="form-control" type="file" onChange={e => setForm({ ...form, image: e.target.files[0] })} />
                                     </div>
                                 </div>
                             </div>
                             <div className="card-footer text-end">
                                 <button className={`btn me-2 py-2 btn-radius-8 ${editId ? "btn-success light" : "btn-primary"}`} onClick={handleSubmit}>
                                     {editId ? <i className="fa-solid fa-rotate me-1"></i> : <i className="fa-solid fa-plus me-1"></i>}
-                                    {editId ? "Update Department" : "Add Department"}
+                                    {editId ? "Update" : "Add"}
                                 </button>
 
                                 {editId && (
@@ -121,7 +121,7 @@ const DepartmentAdmin = () => {
                         <div className="card custom-card">
                             <div className="card-header card-header-custom  d-flex align-items-center bg-dark text-white fw-semibold">
                                 <i className="fa-solid fa-list me-2"></i>
-                                <h5 className="mb-0">Existing Department</h5>
+                                <h5 className="mb-0">Existing Infrastructure</h5>
                             </div>
 
                             <div className="card-body">
@@ -135,7 +135,7 @@ const DepartmentAdmin = () => {
                                         </thead>
 
                                         <tbody>
-                                            {department.map(f => (
+                                            {infra.map(f => (
                                                 <tr key={f._id}>
                                                     <td className="fw-semibold">{f.title}</td>
                                                     <td className="text-end">
@@ -157,11 +157,11 @@ const DepartmentAdmin = () => {
                                                 </tr>
                                             ))}
 
-                                            {!department.length && (
+                                            {!infra.length && (
                                                 <tr>
                                                     <td colSpan="3" className="text-center text-muted py-4">
-                                                       <i className="fa-duotone fa-solid fa-face-frown me-1"></i>
-                                                        No department found
+                                                        <i className="fa-duotone fa-solid fa-face-frown me-1"></i>
+                                                        No data found
                                                     </td>
                                                 </tr>
                                             )}
@@ -178,4 +178,4 @@ const DepartmentAdmin = () => {
     );
 };
 
-export default DepartmentAdmin;
+export default InfraAdmin;
